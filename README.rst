@@ -27,6 +27,9 @@ Properties:
 * ``VirtualHost``: set custom virtual host, e.g. `mycloud.mydomain.it`
 * ``Wellknown``: can be ``enabled`` or ``disabled``. If enabled, add redirects for calDAV and cardDAV.
   This property has effect only if ``VirtualHost`` is empty.
+* ``HonorAdStartTls``: can be ``enabled`` or ``disabled``.  The StartTLS option from SSSD
+  configuration was historyically ignored. If set to ``enabled``, the ``sssd/StartTls`` prop value
+  is honored.
 
 
 Admin user
@@ -62,16 +65,20 @@ The database is automatically saved by ``nethserver-mysql``.
 OCC
 ===
 
-When using ``occ`` command, PHP 7.2 should be enabled inside the environment.
+When using ``occ`` command, PHP 7.3 should be enabled inside the environment.
 
 Invocation example: ::
 
-  su - apache -s /bin/bash -c "source /opt/rh/rh-php72/enable; cd /usr/share/nextcloud/; php occ ldap:show-config"
+  occ ldap:show-config"
 
-Log of rh-php72-fpm
+The ``occ`` command is just a wrapper around: ::
+
+  su - apache -s /bin/bash -c "source /opt/rh/rh-php73/enable; cd /usr/share/nextcloud/; php occ ldap:show-config"
+
+Log of rh-php73-fpm
 ===================
 
-The log of rh-php72-fpm can be found at `/var/opt/rh/rh-php72/log/php-fpm/error-nextcloud.log`
+The log of rh-php73-fpm can be found at `/var/opt/rh/rh-php73/log/php-fpm/error-nextcloud.log`
 
 Cockpit API
 ===========
@@ -146,5 +153,5 @@ As with many other applications in NethServer, un-installing the Nextcloud appli
 3. Drop the MySQL database: ``mysql -e "drop database nextcloud"``
 4. Remove the whole Nextcloud directory: ``rm -rf /usr/share/nextcloud/``
 5. Remove the e-smith DB configuration: ``config delete nextcloud``
-6. Remove the NethServer config directory: ``rm -rf /var/lib/nethserver/nextcloud``
-7. Install NextCloud from the Software Center
+6. Remove the NethServer config directory (WARNING: will remove user data): ``rm -rf /var/lib/nethserver/nextcloud``
+7. Install Nextcloud from the Software Center
